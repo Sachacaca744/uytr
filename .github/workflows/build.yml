@@ -1,0 +1,32 @@
+
+name: Build Minecraft Forge Mod
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Télécharger le code
+        uses: actions/checkout@v4
+
+      - name: Installer Java 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: temurin
+
+      - name: Compiler le mod
+        run: |
+          chmod +x ./Uninu/gradlew
+          ./Uninu/gradlew -p ./Uninu build
+
+      - name: Télécharger le fichier JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: Minecraft-Forge-Mod
+          path: Uninu/build/libs/*.jar

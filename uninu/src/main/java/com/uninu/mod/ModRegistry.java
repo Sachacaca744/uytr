@@ -17,7 +17,7 @@ public class ModRegistry {
 
     public static final RegistryObject<Block> CRATE = BLOCKS.register("crate_chest",
             () -> new CrateBlock(BlockBehaviour.Properties.of().strength(-1.0F, 3600000.0F)
-                    .sound(SoundType.AMETHYST_BLOCK).noLootTable()));
+.sound(SoundType.AMETHYST).noLootTable());
 
     public static final RegistryObject<Item> CRATE_ITEM = ITEMS.register("crate_chest",
             () -> new BlockItem(CRATE.get(), new Item.Properties()));

@@ -15,18 +15,33 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Installer Java 17
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: '17'
           distribution: temurin
 
-      - name: Compiler le mod
+      - name: Trouver et compiler le mod
+        shell: bash
         run: |
-          chmod +x ./Uninu/gradlew
-          ./Uninu/gradlew -p ./Uninu build
+          GRADLEW=$(find . -type f -name gradlew \
+            -not -path './.git/*' -print -quit)
 
-      - name: Télécharger le fichier JAR
+          if [ -z "$GRADLEW" ]; then
+            echo "ERREUR : fichier gradlew introuvable."
+            echo "Vérifiez que le projet Forge est bien présent."
+            exit 1
+          fi
+
+          PROJECT_DIR=$(dirname "$GRADLEW")
+          echo "Projet trouvé : $PROJECT_DIR"
+
+          chmod +x "$GRADLEW"
+          cd "$PROJECT_DIR"
+          ./gradlew build
+
+      - name: Télécharger le JAR
         uses: actions/upload-artifact@v4
         with:
           name: Minecraft-Forge-Mod
-          path: Uninu/build/libs/*.jar
+          path: '**/build/libs/*.jar'
+          if-no-files-found: error
